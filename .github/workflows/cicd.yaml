@@ -38,11 +38,17 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+    - name: Set up Go Runtime
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: go.mod
 
     - name: Run golangci-lint
       uses: golangci/golangci-lint-action@v6
       with:
-        version: v1.60.1
+        version: v1.64.1
+        # Replace 'src' with the actual name of your subfolder
+        working-directory: src
   
   push:
     runs-on: ubuntu-latest
