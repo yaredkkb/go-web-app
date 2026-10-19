@@ -25,14 +25,21 @@ jobs:
 
   code-quality:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-      - uses: golangci/golangci-lint-action@v6
-        with:
-          version: v1.64.1
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Go Runtime
+      uses: actions/setup-go@v5
+      with:
+        # Fixed path to point directly to the root go.mod file
+        go-version-file: go.mod
+
+    - name: Run golangci-lint
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: v1.61.0
 
   push:
     needs: [build, code-quality]
