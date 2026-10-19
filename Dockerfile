@@ -4,7 +4,7 @@ WORKDIR /app
 
 # 1. Copy the dependency manifests first
 COPY go.mod go.sum ./
-
+ENV GOPROXY=https://golang.org,direct
 # 2. Download the dependencies 
 RUN go mod download
 
