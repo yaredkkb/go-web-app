@@ -1,4 +1,3 @@
-
 # CICD using GitHub actions
 
 name: CI/CD
@@ -26,14 +25,11 @@ jobs:
       uses: actions/setup-go@v5
       with:
         go-version: '1.22'
-        cache-dependency-path: go-web-app/go.sum
 
     - name: Build
-      working-directory: go-web-app
       run: go build -v -o go-web-app
       
     - name: Test
-      working-directory: go-web-app
       run: go test ./...
   
   code-quality:
@@ -46,13 +42,12 @@ jobs:
     - name: Set up Go Runtime
       uses: actions/setup-go@v5
       with:
-        go-version-file: go-web-app/go.mod
+        go-version-file: go.mod
 
     - name: Run golangci-lint
       uses: golangci/golangci-lint-action@v6
       with:
         version: v1.64.1
-        working-directory: go-web-app
   
   push:
     runs-on: ubuntu-latest
@@ -74,8 +69,8 @@ jobs:
     - name: Build and Push action
       uses: docker/build-push-action@v6
       with:
-        context: ./go-web-app
-        file: ./go-web-app/Dockerfile
+        context: .
+        file: ./Dockerfile
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/go-web-app:${{ github.run_id }}
 
