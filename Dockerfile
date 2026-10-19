@@ -1,25 +1,14 @@
-FROM golang:1.22 AS build
+FROM golang:1.23-alpine
 
 WORKDIR /app
 
-# Copy the module definition file
-COPY go.mod ./
+# 1. Copy the dependency manifests first
+COPY go.mod go.sum ./
 
-# Copy the rest of your source code
+# 2. Download the dependencies 
+RUN go mod download
+
+# 3. Copy the rest of your source code repository
 COPY . .
 
-# Compiles your application directly into a static binary
-RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o main main.go
-
-# FINAL STAGE - DISTROLESS IMAGE
-FROM gcr.io/distroless/static-debian12:nonroot
-
-WORKDIR /app
-
-COPY --from=build --chown=nonroot:nonroot /app/main ./main
-
-USER nonroot:nonroot
-
-EXPOSE 8080
-
-CMD ["./main"]
+RUN go build -o main .
