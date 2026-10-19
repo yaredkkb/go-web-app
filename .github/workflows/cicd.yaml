@@ -24,7 +24,7 @@ jobs:
           go-version: '1.22'
           
       # Builds the main package from your subdirectory
-      - run: go build -v -o go-web-app ./main
+      - run: go build -v -o go-web-app ./main.go
       
       - run: go test ./...
 
