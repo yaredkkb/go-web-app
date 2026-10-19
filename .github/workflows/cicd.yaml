@@ -18,15 +18,13 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-      - name: List files in the repository
-        run: ls -R
       
       - uses: actions/setup-go@v5
         with:
           go-version: '1.22'
           
-      # Directs Go to search all directories to compile the package safely
-      - run: go build -v -o go-web-app ./...
+      # Builds the main package from your subdirectory
+      - run: go build -v -o go-web-app ./main
       
       - run: go test ./...
 
@@ -40,13 +38,11 @@ jobs:
       - name: Set up Go Runtime
         uses: actions/setup-go@v5
         with:
-          # Scans recursive subdirectories to find your go.mod definition
           go-version-file: go.mod
 
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
-          # Replaced v1.64.1 (which doesn't exist) with a valid stable release
           version: v1.61.0
 
   push:

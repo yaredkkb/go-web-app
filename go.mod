@@ -1,3 +1,3 @@
 module go-web-app-devops
 
-go 1.27.2
+go 1.27
