@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: yaredkb/go-web-app
   #Override the image tag whose default is the chart appVersion
-  tag: "V1"
+  tag: "39339397958"
   pullPolicy: IfNotPresent
 
   ingress:
