@@ -1,0 +1,20 @@
+replicaCount: 1
+
+image:
+  repository: yaredkb/go-web-app
+  #Override the image tag whose default is the chart appVersion
+  tag: "V1"
+  pullPolicy: IfNotPresent
+
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    #Kubernetes.io/ingress.class: nginx
+    #Kubernetes.io/tls-acme: "true"
+      
+    hosts:
+      - host: chart-example.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
