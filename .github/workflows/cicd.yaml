@@ -23,8 +23,8 @@ jobs:
         with:
           go-version: '1.22'
           
-      # Builds the main package from your subdirectory
-      - run: go build -v -o go-web-app ./main.go
+      # Builds using the root source file name verified in local directory map
+      - run: go build -v -o go-web-app main.go
       
       - run: go test ./...
 
@@ -43,6 +43,7 @@ jobs:
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
+          # Pulls the absolute newest release automatically to support newer target go definitions
           version: latest
 
   push:
@@ -50,11 +51,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/login-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
+      # Pre-flight verification block to check that repository secrets are accessible by the job runner
+      - name: Check Secret Availability
+        run: |
+          if [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ]; then
+            echo "ERROR: DOCKERHUB_USERNAME repository secret is unassigned or empty!"
+            exit 1
+          fi
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
       - uses: docker/build-push-action@v6
         with:
           context: .
