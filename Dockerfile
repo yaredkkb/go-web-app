@@ -1,21 +1,26 @@
-FROM golang:1.22.5 AS base
+FROM golang:1.23-alpine 
+
 WORKDIR /app
 
-COPY go.mod .
+COPY go.mod go.sum ./
 
 RUN go mod download
 
 COPY . .
 
-RUN go build -o main .
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o main .
 
 #FINAL STAGE - DISTROLESS IMAGE
 
-FROM gcr.io/distroless/base
+FROM gcr.io/distroless/static-debian12:nonroot
 
-COPY --from=base /app/main .
+WORKDIR /app
 
-COPY --from=base /app/static ./static
+COPY --from=build --chown=nonroot:nonroot /app/main ./main
+
+COPY --from=build --chown=nonroot:nonroot /app/static ./static
+
+USER nonroot:nonroot
 
 EXPOSE 8080
 
