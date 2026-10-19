@@ -3,7 +3,7 @@ FROM golang:1.23-alpine
 WORKDIR /app
 
 # 1. Copy the dependency manifests first
-COPY go.mod go.sum ./
+COPY go.mod go.su[m] ./
 ENV GOPROXY=https://golang.org,direct
 # 2. Download the dependencies 
 RUN go mod download
