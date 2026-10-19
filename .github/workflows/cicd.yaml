@@ -18,6 +18,8 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
+      - name: List files in the repository
+        run: ls -R
       
       - uses: actions/setup-go@v5
         with:
